@@ -85,7 +85,6 @@ body {
     opacity: 1;
 }
 
-/* Dark overlay */
 .hero::after {
     content: "";
     position: absolute;
@@ -98,7 +97,6 @@ body {
     border-bottom-right-radius: 25px;
 }
 
-/* Hero text */
 .hero-text {
     position: absolute;
     top: 50%;
@@ -194,12 +192,11 @@ body {
     display: flex;
     gap: 8px;
     margin: 8px 0;
-    flex-wrap: wrap;
 }
 
 .quick-btn {
     flex: 1;
-    min-width: 60px;
+    min-width: 80px;
     background: #f1f2f6;
     padding: 10px 0;
     border-radius: 12px;
@@ -310,7 +307,10 @@ body {
     </div>
 
     <!-- QUICK DATE BUTTONS -->
-    <div class="quick-date" id="quickDateContainer"></div>
+    <div class="quick-date">
+        <div class="quick-btn" onclick="setQuickDate(0)">Today</div>
+        <div class="quick-btn" onclick="setQuickDate(1)">Tomorrow</div>
+    </div>
 
     <button class="search-btn" onclick="searchBus()">Search Buses</button>
 </div>
@@ -381,31 +381,13 @@ function selectCity(city) {
 }
 
 // QUICK DATE BUTTONS
-function formatDate(date) {
-    return date.toISOString().split("T")[0];
+function setQuickDate(offset) {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    const formatted = d.toISOString().split("T")[0];
+    document.getElementById("date").value = formatted;
+    document.getElementById("dateText").innerText = formatted;
 }
-
-function generateQuickDates() {
-    const container = document.getElementById("quickDateContainer");
-    container.innerHTML = "";
-    const today = new Date();
-
-    for (let i = 0; i < 5; i++) {
-        let d = new Date();
-        d.setDate(today.getDate() + i);
-        let btn = document.createElement("div");
-        btn.className = "quick-btn";
-        btn.innerText = i === 0 ? "Today" : i === 1 ? "Tomorrow" : d.toDateString().slice(0, 3); // "Wed", "Thu", etc.
-        btn.onclick = () => {
-            document.getElementById("date").value = formatDate(d);
-            document.getElementById("dateText").innerText = formatDate(d);
-        };
-        container.appendChild(btn);
-    }
-}
-
-// Initialize quick date buttons
-generateQuickDates();
 
 function searchBus() {
     let from = document.getElementById("fromText").innerText;
